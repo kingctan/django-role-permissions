@@ -11,12 +11,13 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   quickstart
    setup
+   quickstart
    roles
-   checkers
-   functions
-   utilities
+   object_permissions
+   utils
+   views_utils
+   settings
 
 
 Indices and tables

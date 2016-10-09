@@ -1,18 +1,18 @@
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from django.http import Http404
 
 from model_mommy import mommy
 
-from rolepermissions.exceptions import RoleDoesNotExist
 from rolepermissions.roles import RolesManager, AbstractUserRole
 from rolepermissions.shortcuts import (
     get_user_role, grant_permission,
     revoke_permission, retrieve_role,
+    available_perm_status, assign_role,
+    remove_role
 )
 from rolepermissions.verifications import has_permission
-
+from rolepermissions.exceptions import RoleDoesNotExist
 
 
 class ShoRole1(AbstractUserRole):
@@ -21,11 +21,13 @@ class ShoRole1(AbstractUserRole):
         'permission2': True,
     }
 
+
 class ShoRole2(AbstractUserRole):
     available_permissions = {
         'permission3': True,
         'permission4': False,
     }
+
 
 class ShoRole3(AbstractUserRole):
     role_name = 'sho_new_name'
@@ -33,6 +35,39 @@ class ShoRole3(AbstractUserRole):
         'permission5': False,
         'permission6': False,
     }
+
+
+class AssignRole(TestCase):
+
+    def setUp(self):
+        self.user = mommy.make(get_user_model())
+
+    def test_assign_role(self):
+        user = self.user
+
+        assign_role(user, 'sho_role1')
+
+        self.assertEquals(get_user_role(user), ShoRole1)
+
+    def test_assign_invalid_role(self):
+        user = self.user
+
+        with self.assertRaises(RoleDoesNotExist):
+            assign_role(user, 'no role')
+
+
+class RemoveRole(TestCase):
+
+    def setUp(self):
+        self.user = mommy.make(get_user_model())
+
+    def test_user_has_no_role(self):
+        user = self.user
+
+        assign_role(user, 'sho_role1')
+        remove_role(user)
+
+        self.assertEquals(get_user_role(user), None)
 
 
 class GetUserRoleTests(TestCase):
@@ -43,15 +78,15 @@ class GetUserRoleTests(TestCase):
     def test_get_user_role(self):
         user = self.user
 
-        user_role = ShoRole1.assign_role_to_user(user)
+        ShoRole1.assign_role_to_user(user)
 
         self.assertEquals(get_user_role(user), ShoRole1)
 
     def test_get_user_role_after_role_change(self):
         user = self.user
 
-        user_role = ShoRole1.assign_role_to_user(user)
-        user_role = ShoRole3.assign_role_to_user(user)
+        ShoRole1.assign_role_to_user(user)
+        ShoRole3.assign_role_to_user(user)
 
         self.assertEquals(get_user_role(user), ShoRole3)
 
@@ -64,6 +99,27 @@ class GetUserRoleTests(TestCase):
         RolesManager._roles = {}
 
 
+class AvailablePermStatusTests(TestCase):
+
+    def setUp(self):
+        self.user = mommy.make(get_user_model())
+        self.user_role = ShoRole2.assign_role_to_user(self.user)
+
+    def test_permission_hash(self):
+        perm_hash = available_perm_status(self.user)
+
+        self.assertTrue(perm_hash['permission3'])
+        self.assertFalse(perm_hash['permission4'])
+
+    def test_permission_hash_after_modification(self):
+        revoke_permission(self.user, 'permission3')
+
+        perm_hash = available_perm_status(self.user)
+
+        self.assertFalse(perm_hash['permission3'])
+        self.assertFalse(perm_hash['permission4'])
+
+
 class GrantPermissionTests(TestCase):
 
     def setUp(self):
@@ -72,14 +128,14 @@ class GrantPermissionTests(TestCase):
 
     def test_grant_permission(self):
         user = self.user
-        
+
         self.assertTrue(grant_permission(user, 'permission4'))
 
         self.assertTrue(has_permission(user, 'permission4'))
 
     def test_grat_granted_permission(self):
         user = self.user
-        
+
         self.assertTrue(grant_permission(user, 'permission3'))
 
         self.assertTrue(has_permission(user, 'permission3'))
@@ -89,6 +145,7 @@ class GrantPermissionTests(TestCase):
 
         self.assertFalse(grant_permission(user, 'permission1'))
 
+
 class RevokePermissionTests(TestCase):
 
     def setUp(self):
@@ -97,14 +154,14 @@ class RevokePermissionTests(TestCase):
 
     def test_revoke_permission(self):
         user = self.user
-        
+
         self.assertTrue(revoke_permission(user, 'permission3'))
 
         self.assertFalse(has_permission(user, 'permission3'))
 
     def test_revoke_revoked_permission(self):
         user = self.user
-        
+
         self.assertTrue(revoke_permission(user, 'permission4'))
 
         self.assertFalse(has_permission(user, 'permission4'))
@@ -132,5 +189,3 @@ class RetrieveRole(TestCase):
     def test_retrieve_unknowun_role(self):
         role = retrieve_role('unknowun_role')
         self.assertIsNone(role)
-
-

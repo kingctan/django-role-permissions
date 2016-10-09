@@ -1,9 +1,11 @@
 # django-role-permissions
 
-A django app for role based permissions.
+[![Build Status](https://travis-ci.org/vintasoftware/django-role-permissions.svg?branch=master)](https://travis-ci.org/vintasoftware/django-role-permissions)
+[![Current version at PyPI](https://img.shields.io/pypi/v/django-role-permissions.svg)](https://pypi.python.org/pypi/django-role-permissions)
+![Supported Python Versions](https://img.shields.io/pypi/pyversions/django-role-permissions.svg)
 
-*** IMPORTANT ***   
-Version 0.4 has introduced breaking changes. DO *NOT* try to migrate from version 0.3.X (or older), to post 0.4 versions.
+``django-role-permissions`` is a django app for role based permissions. It's built on top of django ``contrib.auth`` user ```Group``` and ``Permission`` functionalities and it does not add any other models to your project.   
+``django-role-permissions``.
 
 ## Documentation
 
@@ -13,27 +15,23 @@ Documentation is available at:
 
 ## Running tests
 
-This packages uses tox to run tests on multiple evironments, please run ```python setup.py test``` before submiting a pull request.
+This packages uses `tox` to run tests on multiple evironments, please make sure they are passing before submiting a pull request.
+To run tests, install tox and run it in your command line from this project folder:
 
-## LICENSE
+``tox``
 
-The MIT License (MIT)
+## Contributors
 
-Copyright (c) 2013 Vinta Software
+[filipeximenes](https://github.com/filipeximenes)   
+[fjsj](https://github.com/fjsj)  
+[felipefarias](https://github.com/felipefarias)  
+[victorgutemberg](https://github.com/victorgutemberg)  
+[sdee](https://github.com/sdee)  
+[reduxionist](https://github.com/reduxionist)  
+[myonov](https://github.com/myonov)  
+[aarcro](https://github.com/aarcro)  
+[drxos](https://github.com/drxos)  
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+## Help
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+If you have any questions or need help, please send an email to: contact@vinta.com.br
